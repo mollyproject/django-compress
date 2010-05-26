@@ -40,6 +40,7 @@ class CompressedCSSNode(template.Node):
         except KeyError:
             return '' # fail silently, do not return anything if an invalid group is specified
 
+        request = context['request']
         if settings.COMPRESS:
 
             version = None
@@ -81,6 +82,7 @@ class CompressedJSNode(template.Node):
                 r += render_js(js, url)
             return r
                     
+        request = context['request']
         if settings.COMPRESS:
 
             version = None
