@@ -66,10 +66,14 @@ def compress_source(filename):
     """
     return os.path.join(settings.COMPRESS_SOURCE, filename)
     
-def compress_url(url, prefix=None):
+def compress_url(url, request, prefix=None):
     if prefix:
         return prefix + urlquote(url)
-    return settings.COMPRESS_URL + urlquote(url)
+    if request.is_secure():
+        base_url = settings.COMPRESS_URL.replace('http://','https://')
+    else:
+        base_url = settings.COMPRESS_URL
+    return base_url + urlquote(url)
 
 def concat(filenames, separator=''):
     """

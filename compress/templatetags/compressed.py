@@ -9,7 +9,7 @@ from compress.utils import compress_root, compress_url, needs_update, filter_css
 
 register = template.Library()
 
-def render_common(template_name, obj, filename, version):
+def render_common(template_name, obj, filename, request, version):
     if settings.COMPRESS:
         filename = get_output_filename(filename, version)
 
@@ -18,15 +18,15 @@ def render_common(template_name, obj, filename, version):
     if filename.startswith('http://'):
         context['url'] = filename
     else:
-        context['url'] = compress_url(filename, prefix)
+        context['url'] = compress_url(filename, request, prefix)
         
     return template.loader.render_to_string(template_name, context)
 
-def render_css(css, filename, version=None):
-    return render_common(css.get('template_name', 'compress/css.html'), css, filename, version)
+def render_css(css, filename, request, version=None):
+    return render_common(css.get('template_name', 'compress/css.html'), css, filename, request, version)
 
-def render_js(js, filename, version=None):
-    return render_common(js.get('template_name', 'compress/js.html'), js, filename, version)
+def render_js(js, filename, request, version=None):
+    return render_common(js.get('template_name', 'compress/js.html'), js, filename, request, version)
 
 class CompressedCSSNode(template.Node):
     def __init__(self, name):
@@ -54,12 +54,12 @@ class CompressedCSSNode(template.Node):
                 path_name = compress_root(filename_base)
                 version = get_version_from_file(path_name, filename)
                 
-            return render_css(css, css['output_filename'], version)
+            return render_css(css, css['output_filename'], request, version)
         else:
             # output source files
             r = ''
             for source_file in css['source_filenames']:
-                r += render_css(css, source_file)
+                r += render_css(css, source_file, request)
 
             return r
 
@@ -95,12 +95,12 @@ class CompressedJSNode(template.Node):
                 path_name = compress_root(filename_base)
                 version = get_version_from_file(path_name, filename)
 
-            return render_js(js, js['output_filename'], version)
+            return render_js(js, js['output_filename'], request, version)
         else:
             # output source files
             r = ''
             for source_file in js['source_filenames']:
-                r += render_js(js, source_file)
+                r += render_js(js, source_file, request)
             return r
 
 #@register.tag
