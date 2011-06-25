@@ -73,7 +73,7 @@ def compress_url(url, request, prefix=None):
         base_url = settings.COMPRESS_URL.replace('http://','https://')
     else:
         base_url = settings.COMPRESS_URL
-    return base_url + urlquote(url)
+    return base_url + urlquote(url.replace(os.sep, '/'))
 
 def concat(filenames, separator=''):
     """
