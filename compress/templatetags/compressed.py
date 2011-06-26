@@ -34,6 +34,8 @@ class CompressedCSSNode(template.Node):
 
     def render(self, context):
         css_name = template.Variable(self.name).resolve(context)
+        if os.name == 'nt':
+            css_name = css_name.lower()
 
         try:
             css = settings.COMPRESS_CSS[css_name]
@@ -70,6 +72,8 @@ class CompressedJSNode(template.Node):
 
     def render(self, context):
         js_name = template.Variable(self.name).resolve(context)
+        if os.name == 'nt':
+            js_name = js_name.lower()
 
         try:
             js = settings.COMPRESS_JS[js_name]
