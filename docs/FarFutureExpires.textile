@@ -18,7 +18,7 @@ h3. django-compress with COMPRESS_VERSION
 
 If you specify <tt>COMPRESS_VERSION</tt> in your configuration, you can add a placeholder to the filenames to output the version number of the different files. See [Configuration]) for more information. The filename itself will be changed when any of the source files are updated.
 
-h3. Configuration of web server (that serves MEDIA_URL)
+h3. Configuration of web server (that serves COMPRESS_URL)
 
 h4. Apache
 

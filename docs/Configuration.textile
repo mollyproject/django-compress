@@ -32,17 +32,20 @@ COMPRESS_JS = {
 
 h4. Group options
 
-* </tt>source_filenames</tt> is a tuple with the source files to be compressed. The files are concatenated in the order it is specified in the tuple. This option is required.
+* </tt>source_filenames</tt> is a tuple with the source files to be compressed, relative to COMPRESS_SOURCE. The files are concatenated in the order it is specified in the tuple. This option is required.
 * </tt>output_filename</tt> is the filename of the (to be) compressed file. This option is required.
 * </tt>extra_context</tt> is a dictionary of values to add to the template context, when generating the HTML for the HTML-tags with the templatetags. This option is not required and can be left out. For CSS, if you do not specify </tt>extra_context</tt>/</tt>media</tt>, the default media in the </tt><link></tt> output will be </tt>media="all"</tt>.
 
-Note that all filenames are specified relative to MEDIA_ROOT, and thus the source files needs to be in your MEDIA_ROOT.
+Note that all filenames are specified relative to COMPRESS_ROOT, and thus the source files needs to be in your COMPRESS_ROOT.
 
 h3. Other settings
 
 * </tt>COMPRESS</tt>: When </tt>COMPRESS</tt> is </tt>True</tt>, CSS and JavaScripts will be concatenated and filtered. When </tt>False</tt>, the source-files will be used instead. Defaults to </tt>not DEBUG</tt> (compressed files will only be used in non-DEBUG-mode (production))
 * </tt>COMPRESS_AUTO</tt>: Auto-generate CSS and JavaScript files whenever needed, when the template tags are invoked. This setting will make sure that the outputted files always are up to date (assuming that you are using the provided templatetags to output the links to your files). If you disable this, you can use the management command to keep your files manually updated. Defaults to </tt>True</tt>.
 * </tt>COMPRESS_VERSION</tt>: regulates whether or not to add a "version number" to the outputted files filename with for use with “far future Expires”. For more information, see [FarFutureExpires]. When you specify </tt>COMPRESS_VERSION</tt> you will also need to add a placeholder (which by default is '?') for the version number in the </tt>output_filename</tt> setting. Files with new filenames will be generated if needed, and old outdated files will be removed at the same time. All files with a matching name e.g. </tt>output_filename</tt> where ? can be replaced by digits will be removed. If you for some reason have files named in the same way, you should consider moving them or putting the compressed files in their own directory.
+* </tt>COMPRESS_ROOT</tt>: This is the path where the compressed files are stored after compression. It defaults to MEDIA_ROOT, but modern Django installs will want to set this to STATIC_ROOT.
+* </tt>COMPRESS_SOURCE</tt>: This is the path where source files for compression are expected to be found. It defaults to MEDIA_ROOT, but modern Django installs will want to set this to STATIC_ROOT.
+* </tt>COMPRESS_URL</tt>: This is the URL that the COMPRESS_ROOT directory is available at. If this is a fully-qualified path (i.e., starts </tt>http://</tt>) then when requests are made to Django over HTTPS, then the protocol in the URL is altered to </tt>https</tt>. Defaults to MEDIA_URL, but most modern Django installs will want to set this to STATIC_URL.
 
 </tt>COMPRESS_VERSION</tt> Example:
 <pre><code>
@@ -63,9 +66,9 @@ This will output a file like <tt>/media/c/screen.r1213947531.css</tt>, which wil
 
 </tt>COMPRESS_*_FILTERS</tt> can be set to an empty tuple or None to not use any filters. The files will however still be concatenated to one file.
 
-h4. Prefix - An Alternative to MEDIA_URL
+h4. Prefix - An Alternative to COMPRESS_URL
 
-In cases where you want to deploy your compiled script and styles to somewhere other than your MEDIA_URL, say a Content Delivery
+In cases where you want to deploy your compiled script and styles to somewhere other than your COMPRESS_URL, say a Content Delivery
 Network, you can use the optional _prefix_ parameter:
 
 <pre><code>
